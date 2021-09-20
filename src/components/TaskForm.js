@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
+import { GlobalContext } from "../context/GlobalContext";
+import { useHistory, useParams } from "react-router-dom";
 
 const TaskForm = () => {
+  const { addTask } = useContext(GlobalContext);
+  const history = useHistory();
+  const params = useParams();
+
   const [task, setTask] = useState({
     title: "",
     description: "",
   });
 
-  const handleChange = (e) => {};
+  const handleChange = (e) => {
+    setTask({ ...task, [e.target.name]: e.target.value });
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    addTask(task);
+    history.push("/");
+  };
+
+  useEffect(() => {
+    if (params.id) {
+      console.log("editing");
+    }
+  }, []);
   return (
     <div className="flex justify-center items-center h-3/4">
-      <form className="bg-gray-900 p-10">
+      <form className="bg-gray-900 p-10" onSubmit={handleSubmit}>
         <h2 className="mb-7 text-3x1">Add Task</h2>
         <div className="mb-5">
           <input
